@@ -35,7 +35,7 @@ opt.splitbelow = true
 opt.title = true
 
 -- Movement
-opt.scrolloff = 99
+opt.scrolloff = 999
 opt.whichwrap = o.whichwrap .. "<,>,h,l"
 
 -- Status

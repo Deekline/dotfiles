@@ -13,7 +13,6 @@ local opts = {
 		scss = { "prettierd" },
 		typescript = { "eslint_d", "prettierd" },
 		vue = { "eslint_d" },
-		fish = { "fish_indent" },
 		sh = { "shfmt", "shellharden" },
 		bash = { "shfmt", "shellharden" },
 		markdown = { "cbfmt", "prettierd", "markdownlint" },

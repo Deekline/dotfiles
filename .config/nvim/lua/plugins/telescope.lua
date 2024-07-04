@@ -264,7 +264,7 @@ return {
 		end)
 		create_cmd("TelescopeLiveGrepHidden", function()
 			require("telescope.builtin").live_grep({
-				additional_args = { "--hidden" },
+				additional_args = { "--ignore" },
 			})
 		end)
 	end,

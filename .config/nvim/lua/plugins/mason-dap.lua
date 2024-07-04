@@ -1,12 +1,12 @@
 local opts = {
-  ensure_installed = {
-    "bash",
-    "chrome",
-    "js",
-    "node2",
-  },
-  automatic_installation = true,
-  automatic_setup = true,
+	ensure_installed = {
+		"bash",
+		"chrome",
+		"js",
+		"node2",
+	},
+	automatic_installation = true,
+	automatic_setup = true,
 }
 
 -- local handlers = function()
@@ -51,17 +51,18 @@ local opts = {
 -- end
 
 local listeners = function()
-  local dap, dapui = require("dap"), require("dapui")
+	local dap, dapui = require("dap"), require("dapui")
 end
 
 --  TODO: 2024-06-22 - can this only be lazy loaded until DAP starts?
 
 return {
-  "jay-babu/mason-nvim-dap.nvim",
-  opts = opts,
-  event = "BufReadPre",
-  dependencies = {
-    "williamboman/mason.nvim",
-    "mfussenegger/nvim-dap",
-  },
+	"jay-babu/mason-nvim-dap.nvim",
+	opts = opts,
+	event = "BufReadPre",
+	dependencies = {
+		"williamboman/mason.nvim",
+		"mfussenegger/nvim-dap",
+		"nvim-nio",
+	},
 }

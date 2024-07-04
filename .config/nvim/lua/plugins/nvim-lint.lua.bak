@@ -20,17 +20,25 @@ return {
 			sh = { "shellcheck" },
 			bash = { "shellcheck" },
 		}
+		local function notify_debug(msg)
+			vim.notify(msg, vim.log.levels.DEBUG)
+		end
 
 		lint.linters.eslint_d = {
 			name = "eslint_d",
 			cmd = "eslint_d",
 			stdin = true,
 			args = {
+				"--format",
+				"json",
 				"--stdin",
 				"--stdin-filename",
-				"%:p", -- %:p will be replaced by the current file's full path
+				function()
+					return vim.api.nvim_buf_get_name(0)
+				end,
 				"--config",
-				eslint_config_path,
+
+				eslint_config_path, -- Change this to your ESLint config path
 			},
 			stream = "stdout",
 			ignore_exitcode = true,
@@ -60,19 +68,25 @@ return {
 		}
 
 		vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
-			group = vim.api.nvim_create_augroup("lint", { clear = true }),
+			--"group = vim.api.nvim_create_augroup("lint", { clear = true }),
 			callback = function()
-				if ignore_buftype[vim.bo.filetype] then
-					for _, buftype in ipairs(ignore_buftype[vim.bo.filetype]) do
-						if buftype == vim.bo.buftype then
-							return
-						end
-					end
-				end
-				lint.try_lint()
+				-- if ignore_buftype[vim.bo.filetype] then
+				-- 	for _, buftype in ipairs(ignore_buftype[vim.bo.filetype]) do
+				-- 		if buftype == vim.bo.buftype then
+				-- 			return
+				-- 		end
+				-- 	end
+				-- end:w
+
+				print(lint.linters.eslint_d)
+				print("we are trying to lint")
+				lint.try_lint({ "eslint_d" })
 				lint.try_lint({ "codespell" })
 			end,
 		})
+		vim.keymap.set("n", "<leader>ll", function()
+			lint.try_lint()
+		end, { desc = "Trigger linting for current file" })
 		vim.api.nvim_create_autocmd({ "BufWritePost", "BufEnter" }, {
 			group = vim.api.nvim_create_augroup("lint", { clear = true }),
 			callback = function()
