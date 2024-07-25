@@ -41,14 +41,14 @@ export NVM_DIR="$HOME/.nvm"
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
 export PATH="${HOME}/.pyenv/shims:${PATH}"
 
-if [ -f ~/dotfiles/zsh_aliases/project.zsh ]; then
-    source ~/dotfiles/zsh_aliases/project.zsh 
+if [ -f ~/dotfiles/zsh/zsh_aliases/project.zsh ]; then
+    source ~/dotfiles/zsh/zsh_aliases/project.zsh 
 fi
 
-export PYTHON=/Users/myemets/.pyenv/shims/python3
-#export PYTHON=/Users/myemets/.pyenv/shims/python2
-alias python='python3.12'
-#alias python='python2.7'
+#export PYTHON=/Users/myemets/.pyenv/shims/python3
+export PYTHON=/Users/myemets/.pyenv/shims/python2
+#alias python='python3.12'
+alias python='python2.7'
 
 
 . "$HOME/.asdf/asdf.sh"
