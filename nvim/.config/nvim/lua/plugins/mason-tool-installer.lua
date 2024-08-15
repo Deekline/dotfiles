@@ -6,7 +6,7 @@ local opts = {
 		"codespell",
 		-- "cspell",
 		-- "editorconfig-checker",
-		"eslint_d",
+		{ "eslint_d", version = "v13.1.2" },
 		-- "hadolint",
 		-- "jsonlint",
 		-- "luacheck",

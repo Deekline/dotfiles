@@ -31,7 +31,9 @@ PACKAGES=(
   bat
 )
 
-CASKS=()
+CASKS=(
+  kitty
+)
 
 # Install packages
 echo "Installing packages..."
@@ -59,5 +61,6 @@ stow git
 stow nvim
 stow tmux
 stow zsh
+stow kitty
 
 echo "Installation complete!"
