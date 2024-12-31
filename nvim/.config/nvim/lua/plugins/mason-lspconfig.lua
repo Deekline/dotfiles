@@ -22,6 +22,7 @@ local opts = {
 		"volar",
 		"vuels",
 		"yamlls",
+		"gopls",
 	},
 	automatic_installation = true,
 }

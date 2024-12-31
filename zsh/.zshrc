@@ -47,8 +47,8 @@ fi
 
 #export PYTHON=/Users/myemets/.pyenv/shims/python3
 export PYTHON=/Users/myemets/.pyenv/shims/python2
-#alias python='python3.12'
-alias python='python2.7'
+alias python='python3.12'
+#alias python='python2.7'
 
 
 . "$HOME/.asdf/asdf.sh"
@@ -123,3 +123,5 @@ eval $(thefuck --alias fk)
 eval "$(zoxide init zsh)"
 
 alias cd="z"
+export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home
+export PATH=$JAVA_HOME/bin:$PATH

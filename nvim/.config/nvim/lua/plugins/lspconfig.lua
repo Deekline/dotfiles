@@ -92,7 +92,10 @@ local config = function()
 			km("n", "<leader>D", l.buf.type_definition, bufopts)
 			km("n", "gr", l.buf.references, bufopts)
 			km({ "n", "v" }, "<leader>ca", l.buf.code_action, bufopts)
-			km("n", "<leader>rn", vim.lsp.buf.rename, bufopts)
+			km("n", "<leader>rn", function()
+				print(vim.lsp.buf)
+				vim.lsp.buf.rename()
+			end, bufopts)
 			km("n", "L", vim.lsp.buf.hover, bufopts)
 		end,
 	})
@@ -141,6 +144,7 @@ local config = function()
 			"sqlls",
 			"yamlls",
 			"volar",
+			"gopls",
 			--"vuels",
 		},
 		tailwindcss = {

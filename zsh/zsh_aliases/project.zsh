@@ -2,5 +2,6 @@ alias rmuiv="~/WebstormProjects/Macys/Vue/pdp/ && nvm use 18.9 && m server mcom 
 alias rbuiv="~/WebstormProjects/Macys/Vue/pdp/ && nvm use 18.9 && m server bcom --env=./envconfigs/local/bcom/.env"
 alias rbuib="cd ~/WebstormProjects/Macys/backbone/digital-product-ui-bcom &&  m server -d --env=./envconfigs/local/bcom/.env"
 alias rmuib="cd ~/WebstormProjects/Macys/backbone/digital-product-ui-mcom &&  m server -d --env=./envconfigs/local/mcom/.env"
-
+alias mlint="~/WebstormProjects/Macys/Vue/pdp/ && nvm use 18.9 && m lint -f"
+alias mtest="~/WebstormProjects/Macys/Vue/pdp/ && nvm use 18.9 && m test"
 
