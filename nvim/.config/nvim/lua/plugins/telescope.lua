@@ -1,6 +1,5 @@
 local u = require("util")
 local m = u.lazy_map
-local project = require("util.project")
 
 local base_file_ignore_patterns = { "node_modules", "\\.git" }
 local function get_ignore_patterns()
@@ -141,26 +140,6 @@ local config = function()
 					winblend = 2,
 				}),
 			},
-			helpgrep = {
-				ignore_paths = {
-					vim.fn.stdpath("state") .. "/lazy/readme",
-				},
-				mappings = {
-					i = {
-						["<CR>"] = actions.select_tab,
-						-- ["<CR>"] = actions.select_default,
-						["<C-v>"] = actions.select_vertical,
-						["<C-s>"] = actions.select_horizontal,
-					},
-					n = {
-						["<CR>"] = actions.select_tab,
-						-- ["<CR>"] = actions.select_default,
-						["<C-v>"] = actions.select_vertical,
-						["<C-s>"] = actions.select_horizontal,
-					},
-				},
-				default_grep = builtin.live_grep,
-			},
 			lazy = {
 				theme = "ivy",
 				show_icon = true,
@@ -181,7 +160,6 @@ local config = function()
 		"fzf",
 		"ui-select",
 		"lazy",
-		"helpgrep",
 	}
 
 	for e in ipairs(extensions) do
@@ -199,12 +177,11 @@ local keys = {
 	m("<leader>fJ", [[TelescopeLiveGrepHidden]]),
 	m("<leader>fe", [[TelescopeFindFilesNoIgnore]]),
 	m("<leader>bb", [[Telescope buffers]]),
-	m("<leader>hg", [[Telescope helpgrep]]),
 	m("<leader>tg", [[Telescope git_status]]),
 	m("<leader>ta", [[Telescope autocommands]]),
 	m("<leader>th", [[Telescope highlights]]),
 }
-keys = project.get_keys("helpgrep", keys)
+
 local dependencies = {
 	{
 		"nvim-telescope/telescope-fzf-native.nvim",
@@ -217,7 +194,6 @@ local dependencies = {
 	"tsakirist/telescope-lazy.nvim",
 	"folke/neoconf.nvim",
 }
-dependencies = project.get_dependencies("helpgrep", dependencies)
 
 return {
 	"nvim-telescope/telescope.nvim",
