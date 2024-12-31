@@ -11,7 +11,6 @@ return {
 	version = "*",
 	keys = {
 		m("[1", "ToggleTermLazyGit", modes),
-		m("[2", "ToggleTermRepl", modes),
 	},
 	branch = "main",
 }
