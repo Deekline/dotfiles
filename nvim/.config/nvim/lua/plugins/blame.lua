@@ -7,6 +7,6 @@ return {
 	end,
 	cmd = { "BlameToggle" },
 	keys = {
-		m("<leader>gb", [[BlameToggle]], { desc = "Open Git Blame" }),
+		m("<leader>gbt", [[BlameToggle]], { desc = "Open Git Blame" }),
 	},
 }
