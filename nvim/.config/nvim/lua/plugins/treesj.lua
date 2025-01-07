@@ -11,7 +11,7 @@ return {
 		"nvim-treesitter/nvim-treesitter",
 	},
 	keys = {
-		m("<leader>I", [[lua require("treesj").toggle({split = {recursive = true}})]]),
+		m("<leader>I", [[lua require("treesj").toggle({split = {recursive = true}})]], {}, { desc = "Treesj" }),
 	},
 	opts = opts,
 	enabled = true,

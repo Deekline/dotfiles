@@ -169,17 +169,17 @@ end
 
 --  TODO: 2024-03-26 - How to handle multiple local projects?
 local keys = {
-	m("<leader>tk", [[Telescope keymaps]]),
-	m("<leader>hh", [[Telescope help_tags]]),
-	m("<leader>ff", [[TelescopeFindFiles]]),
-	m("<leader>fF", [[TelescopeFindFilesPreview]]),
-	m("<leader>fj", [[Telescope live_grep]]),
-	m("<leader>fJ", [[TelescopeLiveGrepHidden]]),
-	m("<leader>fe", [[TelescopeFindFilesNoIgnore]]),
-	m("<leader>bb", [[Telescope buffers]]),
-	m("<leader>tg", [[Telescope git_status]]),
-	m("<leader>ta", [[Telescope autocommands]]),
-	m("<leader>th", [[Telescope highlights]]),
+	m("<leader>tk", [[Telescope keymaps]], {}, { desc = "Find keymaps" }),
+	m("<leader>hh", [[Telescope help_tags]], {}, { desc = "Find help_tags" }),
+	m("<leader>ff", [[TelescopeFindFiles]], {}, { desc = "Find Files" }),
+	m("<leader>fF", [[TelescopeFindFilesPreview]], {}, { desc = "Find Files Preview" }),
+	m("<leader>fj", [[Telescope live_grep]], {}, { desc = "Find with grep" }),
+	m("<leader>fJ", [[TelescopeLiveGrepHidden]], {}, { desc = "Find with grep hidden" }),
+	m("<leader>fe", [[TelescopeFindFilesNoIgnore]], {}, { desc = "Find Files No Ignore" }),
+	m("<leader>bb", [[Telescope buffers]], {}, { desc = "Telescope buffers" }),
+	m("<leader>tg", [[Telescope git_status]], {}, { desc = "Telescope git status" }),
+	m("<leader>ta", [[Telescope autocommands]], {}, { desc = "Telescope autocommands" }),
+	m("<leader>th", [[Telescope highlights]], {}, { desc = "Telescope highlights" }),
 }
 
 local dependencies = {

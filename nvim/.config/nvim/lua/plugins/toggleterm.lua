@@ -10,7 +10,7 @@ return {
 	event = "VeryLazy",
 	version = "*",
 	keys = {
-		m("[1", "ToggleTermLazyGit", modes),
+		m("[1", "ToggleTermLazyGit", modes, { desc = "Toggle LazyGit" }),
 	},
 	branch = "main",
 }

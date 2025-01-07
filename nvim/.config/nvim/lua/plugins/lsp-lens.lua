@@ -18,6 +18,6 @@ return {
 	opts = opts,
 	event = "BufReadPre",
 	keys = {
-		m("<leader>llt", "LspLensToggle"),
+		m("<leader>llt", "LspLensToggle", {}, { desc = "lsplens toggle" }),
 	},
 }

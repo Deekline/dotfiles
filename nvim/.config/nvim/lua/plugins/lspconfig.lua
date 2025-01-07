@@ -122,9 +122,13 @@ local config = function()
 	local function tsdk(root_dir)
 		local global_ts = "/Users/myemets/.nvm/versions/node/v18.9.1/lib/node_modules/typescript/lib"
 		local found_ts = ""
-		found_ts = util.path.join(root_dir, "node_modules", "typescript", "lib")
-		if util.path.exists(found_ts) then
-			return found_ts
+		if root_dir then
+			found_ts = util.path.join(root_dir, "node_modules", "typescript", "lib")
+			if util.path.exists(found_ts) then
+				return found_ts
+			else
+				return global_ts
+			end
 		else
 			return global_ts
 		end

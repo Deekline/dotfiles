@@ -13,21 +13,21 @@ return {
 	keys = {
 		m("<leader>ha", function()
 			require("harpoon"):list():add()
-		end, { "n", "x" }),
+		end, { "n", "x" }, { desc = "harpoon add" }),
 		m("<leader>ho", function()
 			local harpoon = require("harpoon")
 			harpoon.ui:toggle_quick_menu(harpoon:list())
-		end, { "n", "x" }),
+		end, { "n", "x" }, { desc = "harpoon list" }),
 		m("]]", function()
 			require("harpoon"):list():next({
 				ui_nav_wrap = true,
 			})
-		end, { "n", "x" }),
+		end, { "n", "x" }, { desc = "harpoon file next" }),
 		m("[[", function()
 			require("harpoon"):list():prev({
 				ui_nav_wrap = true,
 			})
-		end, { "n", "x" }),
+		end, { "n", "x" }, { desc = "harpoon prev" }),
 	},
 	dependencies = {
 		"nvim-lua/plenary.nvim",
