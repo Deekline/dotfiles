@@ -1,40 +1,42 @@
-local u = require("util")
-local m = u.lazy_map
-local opts = {
-	settings = {
-		sync_on_ui_close = true,
-		save_on_toggle = true,
-	},
-}
-
 return {
 	"ThePrimeagen/harpoon",
-	opts = opts,
-	keys = {
-		m("<leader>ha", function()
-			require("harpoon"):list():add()
-		end, { "n", "x" }, { desc = "harpoon add" }),
-		m("<leader>ho", function()
-			local harpoon = require("harpoon")
-			harpoon.ui:toggle_quick_menu(harpoon:list())
-		end, { "n", "x" }, { desc = "harpoon list" }),
-		m("]]", function()
-			require("harpoon"):list():next({
-				ui_nav_wrap = true,
-			})
-		end, { "n", "x" }, { desc = "harpoon file next" }),
-		m("[[", function()
-			require("harpoon"):list():prev({
-				ui_nav_wrap = true,
-			})
-		end, { "n", "x" }, { desc = "harpoon prev" }),
-	},
-	dependencies = {
-		"nvim-lua/plenary.nvim",
-		{
-			"pockata/harpoon-highlight-current-file",
-			config = true,
+	branch = "harpoon2",
+	opts = {
+		menu = {
+			width = vim.api.nvim_win_get_width(0) - 4,
+		},
+		settings = {
+			save_on_toggle = true,
 		},
 	},
-	branch = "harpoon2",
+	keys = function()
+		local keys = {
+			{
+				"<leader>ha",
+				function()
+					require("harpoon"):list():add()
+				end,
+				desc = "Harpoon File",
+			},
+			{
+				"<leader>ho",
+				function()
+					local harpoon = require("harpoon")
+					harpoon.ui:toggle_quick_menu(harpoon:list())
+				end,
+				desc = "Harpoon Quick Menu",
+			},
+		}
+
+		for i = 1, 5 do
+			table.insert(keys, {
+				"<leader>" .. i,
+				function()
+					require("harpoon"):list():select(i)
+				end,
+				desc = "Harpoon to File " .. i,
+			})
+		end
+		return keys
+	end,
 }

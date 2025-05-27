@@ -1,10 +1,12 @@
-local u = require("util")
-local m = u.lazy_map
+local fns = require("config/functions")
+local m = fns.lazy_map
+local create_cmd = fns.create_cmd
 
 local base_file_ignore_patterns = { "node_modules", "\\.git" }
+
 local function get_ignore_patterns()
 	local patterns = require("neoconf").get("telescope.defaults.file_ignore_patterns")
-	local ignore_patterns = u.deep_copy(base_file_ignore_patterns)
+	local ignore_patterns = fns.deep_copy(base_file_ignore_patterns)
 	if not patterns or not vim.islist(patterns) then
 		return ignore_patterns
 	end
@@ -17,7 +19,7 @@ end
 local config = function()
 	local telescope = require("telescope")
 	local actions = require("telescope.actions")
-	local builtin = require("telescope.builtin")
+
 	telescope.setup({
 		defaults = {
 			prompt_prefix = "> ",
@@ -53,7 +55,7 @@ local config = function()
 			file_sorter = require("telescope.sorters").get_fuzzy_file,
 			file_ignore_patterns = base_file_ignore_patterns,
 			generic_sorter = require("telescope.sorters").get_generic_fuzzy_sorter,
-			winblend = 2,
+			--winblend = 2,
 			border = {},
 			borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
 			color_devicons = true,
@@ -169,17 +171,16 @@ end
 
 --  TODO: 2024-03-26 - How to handle multiple local projects?
 local keys = {
-	m("<leader>tk", [[Telescope keymaps]], {}, { desc = "Find keymaps" }),
-	m("<leader>hh", [[Telescope help_tags]], {}, { desc = "Find help_tags" }),
-	m("<leader>ff", [[TelescopeFindFiles]], {}, { desc = "Find Files" }),
-	m("<leader>fF", [[TelescopeFindFilesPreview]], {}, { desc = "Find Files Preview" }),
+	m("<leader>fk", [[Telescope keymaps]], {}, { desc = "Find keymaps" }),
+	m("<leader>ft", [[Telescope help_tags]], {}, { desc = "Find help_tags" }),
+	m("<leader>ff", [[TelescopeFindFilesPreview]], {}, { desc = "Find Files Preview" }),
 	m("<leader>fj", [[Telescope live_grep]], {}, { desc = "Find with grep" }),
 	m("<leader>fJ", [[TelescopeLiveGrepHidden]], {}, { desc = "Find with grep hidden" }),
 	m("<leader>fe", [[TelescopeFindFilesNoIgnore]], {}, { desc = "Find Files No Ignore" }),
-	m("<leader>bb", [[Telescope buffers]], {}, { desc = "Telescope buffers" }),
-	m("<leader>tg", [[Telescope git_status]], {}, { desc = "Telescope git status" }),
-	m("<leader>ta", [[Telescope autocommands]], {}, { desc = "Telescope autocommands" }),
-	m("<leader>th", [[Telescope highlights]], {}, { desc = "Telescope highlights" }),
+	m("<leader>fb", [[Telescope buffers]], {}, { desc = "Telescope buffers" }),
+	m("<leader>fg", [[Telescope git_status]], {}, { desc = "Telescope git status" }),
+	m("<leader>fa", [[Telescope autocommands]], {}, { desc = "Telescope autocommands" }),
+	m("<leader>fh", [[Telescope highlights]], {}, { desc = "Telescope highlights" }),
 }
 
 local dependencies = {
@@ -199,7 +200,6 @@ return {
 	"nvim-telescope/telescope.nvim",
 	config = config,
 	init = function()
-		local create_cmd = require("util").create_cmd
 		create_cmd("TelescopeFindFiles", function()
 			require("telescope.builtin").find_files({
 				file_ignore_patterns = get_ignore_patterns(),

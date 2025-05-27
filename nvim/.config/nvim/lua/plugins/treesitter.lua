@@ -39,6 +39,7 @@ local config = function()
       "vimdoc",
       "vue",
       "yaml",
+      "tsx",
     },
     highlight = {
       enable = true,
@@ -57,10 +58,6 @@ local config = function()
         enable = true,
         border = "rounded",
         floating_preview_opts = {},
-        -- peek_definition_code = {
-        -- 	["<leader>df"] = "@function.outer",
-        -- 	["<leader>dF"] = "@class.outer",
-        -- },
       },
       move = {
         enable = true,
@@ -73,7 +70,6 @@ local config = function()
           ["]a"] = "@attribute.inner",
           ["]m"] = "@this_method_call",
           ["]s"] = { query = "@scope", query_group = "locals" },
-          --  TODO: 2024-01-08 - this is not working in typescript files
           ["]c"] = "@method_object_call",
           ["]o"] = "@object_declaration",
           ["]k"] = "@object_key",
@@ -152,7 +148,6 @@ local config = function()
         node_incremental = "v",
         node_decremental = "V",
         init_selection = "<C-y>",
-        -- scope_incremental = "<C-v>",
       },
     },
   }
@@ -160,10 +155,6 @@ local config = function()
   require("nvim-treesitter.configs").setup(opts)
 
   vim.treesitter.language.register("markdown", "octo")
-
-  local ts_repeat_move = require("nvim-treesitter.textobjects.repeatable_move")
-  -- k({ "n", "x", "o" }, ";", ts_repeat_move.repeat_last_move_next)
-  -- k({ "n", "x", "o" }, ",", ts_repeat_move.repeat_last_move_previous)
 end
 
 return {
@@ -175,7 +166,6 @@ return {
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
       "JoosepAlviste/nvim-ts-context-commentstring",
-      "CKolkey/ts-node-action",
       "nvim-treesitter/nvim-treesitter-context",
       {
         "bennypowers/template-literal-comments.nvim",

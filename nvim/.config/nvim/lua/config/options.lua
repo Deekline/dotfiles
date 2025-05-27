@@ -1,109 +1,77 @@
+vim.g.mapleader = " "
+vim.g.maplocalleader = "\\"
+vim.g.autoformat = true
+vim.g.trouble_lualine = true
+
 local opt = vim.opt
-local o = vim.o
-local fn = vim.fn
-local const = require("config.constants").const
 
--- General
-opt.numberwidth = 1
-opt.number = true
-opt.relativenumber = true
+opt.autowrite = true -- Enable auto write
+opt.clipboard = vim.env.SSH_TTY and "" or "unnamedplus" -- Sync with system clipboard
+opt.completeopt = "menu,menuone,noselect"
+opt.conceallevel = 2 -- Hide * markup for bold and italic, but not markers with substitutions
+opt.confirm = true -- Confirm to save changes before exiting modified buffer
+opt.cursorline = true -- Enable highlighting of the current line
+opt.expandtab = true -- Use spaces instead of tabs
 opt.fillchars = {
-	horiz = "━",
-	horizup = "┻",
-	horizdown = "┳",
-	vert = "┃",
-	vertleft = "┨",
-	vertright = "┣",
-	verthoriz = "╋",
-	fold = "⠀",
+	foldopen = "",
+	foldclose = "",
+	fold = " ",
+	foldsep = " ",
+	diff = "╱",
 	eob = " ",
-	diff = "┃",
-	msgsep = "‾",
-	foldsep = "│",
-	foldclose = "▶",
-	foldopen = "▼",
 }
-opt.confirm = true
-opt.shortmess = "aoOstTWAIcCFSq"
-opt.updatetime = 100
+opt.foldlevel = 99
+opt.ignorecase = true -- Ignore case
+opt.inccommand = "nosplit" -- preview incremental substitute
+opt.jumpoptions = "view"
+opt.laststatus = 3 -- global statusline
+opt.linebreak = true -- Wrap lines at convenient points
+vim.opt.listchars = {
+	tab = "│ ", -- Use │ for tabs instead of >
+	trail = "·", -- Show trailing spaces as ·
+	extends = "›", -- Show when line continues beyond screen
+	precedes = "‹", -- Show when line starts before screen
+}
+opt.list = true -- Show some invisible characters (tabs...
+opt.mouse = "a" -- Enable mouse mode
+opt.number = true -- Print line number
+opt.pumblend = 10 -- Popup blend
+opt.pumheight = 10 -- Maximum number of entries in a popup
+opt.relativenumber = true -- Relative line numbers
+opt.ruler = false -- Disable the default ruler
+opt.scrolloff = 4 -- Lines of context
+opt.sessionoptions = { "buffers", "curdir", "tabpages", "winsize", "help", "globals", "skiprtp", "folds" }
+opt.shiftround = true -- Round indent
+opt.shiftwidth = 2 -- Size of an indent
+opt.shortmess:append({ W = true, I = true, c = true, C = true })
+opt.showmode = false -- Dont show mode since we have a statusline
+opt.sidescrolloff = 8 -- Columns of context
+opt.signcolumn = "yes" -- Always show the signcolumn, otherwise it would shift the text each time
+opt.smartcase = true -- Don't ignore case with capitals
+opt.smartindent = true -- Insert indents automatically
+opt.spelllang = { "en" }
+opt.splitbelow = true -- Put new windows below current
 opt.splitkeep = "screen"
-opt.ruler = false
-
--- Window
-opt.splitright = true
-opt.splitbelow = true
-opt.title = true
-
--- Movement
-opt.scrolloff = 999
-opt.whichwrap = o.whichwrap .. "<,>,h,l"
-
--- Status
-opt.showmode = true
-opt.mouse = "a"
-opt.showcmd = true
-opt.showtabline = 0
-
--- Indentation
-opt.tabstop = 2
-opt.softtabstop = 2
-opt.shiftwidth = 2
-opt.expandtab = true
-opt.smartindent = true
-opt.linebreak = true
-opt.showbreak = string.rep(" ", 3)
-
--- Search
-opt.ignorecase = true
-opt.smartcase = true
-opt.hlsearch = true
-opt.wildmenu = true
-opt.wildmode = "longest:full,full"
-opt.wildoptions = "pum"
-
--- Editing
-opt.modelines = 1
-opt.breakindent = true
-opt.showmatch = true
-opt.swapfile = false
-opt.undodir = fn.stdpath("data") .. "/undodir"
+opt.splitright = true -- Put new windows right of current
+opt.tabstop = 2 -- Number of spaces tabs count for
+opt.termguicolors = true -- True color support
+opt.timeoutlen = vim.g.vscode and 1000 or 300 -- Lower than default (1000) to quickly trigger which-key
 opt.undofile = true
-opt.textwidth = 80
-opt.wrap = true
-opt.inccommand = "split"
-opt.diffopt = {
-	"internal",
-	"filler",
-	"closeoff",
-	"hiddenoff",
-	"algorithm:minimal",
-}
-opt.conceallevel = 0
+opt.undolevels = 10000
+opt.updatetime = 200 -- Save swap file and trigger CursorHold
+opt.virtualedit = "block" -- Allow cursor to move where there is no text in visual block mode
+opt.wildmode = "longest:full,full" -- Command-line completion mode
+opt.winminwidth = 5 -- Minimum window width
+opt.wrap = false -- Disable line wrap
 
-opt.pumblend = 12
-opt.clipboard = "unnamedplus"
-opt.formatoptions = opt.formatoptions
-	- "t" -- wrap with text width
-	+ "c" -- wrap comments
-	- "r" -- insert comment after enter
-	- "o" -- insert comment after o/O
-	- "q" -- allow formatting of comments with gq
-	- "a" -- format paragraphs
-	+ "n" -- recognized numbered lists
-	- "2" -- use indent of second line for paragraph
-	+ "l" -- long lines are not broken
-	+ "j" -- remove comment when joining lines
-opt.syntax = "off"
-opt.spell = false
+-- Fix markdown indentation settings
+vim.g.markdown_recommended_style = 0
 
--- Colors
-opt.termguicolors = true
-
--- Shada
-opt.shada = "!,'1000,f1,<1000,s100,:1000,/1000,h"
-
--- CMP
-opt.completeopt = { "menu", "menuone", "noselect" }
-
--- Sessions
-opt.sessionoptions = const.opt.sessionoptions
+vim.api.nvim_create_autocmd("TextYankPost", {
+	group = vim.api.nvim_create_augroup("YankHighlight", { clear = true }),
+	pattern = "*",
+	callback = function()
+		vim.highlight.on_yank()
+	end,
+	desc = "Highlight yank",
+})
