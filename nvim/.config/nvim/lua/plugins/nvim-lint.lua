@@ -8,7 +8,6 @@ return {
 			vue = { "eslint" },
 			javascript = { "eslint" },
 			typescript = { "eslint" },
-			lua = { "stylua" },
 		}
 		-- Create a custom eslint linter that handles the "Brand mcom used" output
 		lint.linters.eslint = vim.tbl_deep_extend("force", lint.linters.eslint, {
@@ -42,7 +41,6 @@ return {
 			"BufWritePost", -- After saving (to catch any remaining issues after formatting)
 			"InsertLeave", -- When leaving insert mode (i → n)
 			"TextChanged", -- When text changes in normal mode (x, dd, etc.)
-			"TextChangedI", -- When text changes in insert mode (typing)
 		}, {
 			group = lint_augroup,
 			callback = function()
