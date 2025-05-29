@@ -23,6 +23,13 @@ return {
 				map("gD", vim.lsp.buf.declaration, "[G]oto [D]eclaration")
 				map("gO", require("telescope.builtin").lsp_document_symbols, "Open Document Symbols")
 				map("gW", require("telescope.builtin").lsp_dynamic_workspace_symbols, "Open Workspace Symbols")
+				map("K", function()
+					vim.lsp.buf.hover({
+						border = "rounded",
+						winhighlight = "Normal:LspHover,FloatBorder:LspHoverBorder",
+					})
+				end, "Hover with background")
+
 				---@param client vim.lsp.Client
 				---@param method vim.lsp.protocol.Method
 				---@param bufnr? integer some lsp support methods only in specific files

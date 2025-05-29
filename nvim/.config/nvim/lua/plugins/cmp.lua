@@ -34,6 +34,7 @@ local is_not_filetype = function()
 end
 
 local source_mapping = {
+  AI = "[AI]",
 	nvim_lsp = "[LSP]",
 	nvim_lua = "[LUA]",
 	luasnip = "[SNIP]",
@@ -100,6 +101,11 @@ local config = function()
 			--					return not context.in_treesitter_capture("string") and not context.in_syntax_group("String")
 			--				end,
 			--			},
+      { 
+        name = 'AI',
+        priority = 100, 
+        group_index = 1,
+      },
 			{
 				name = "nvim_lsp",
 				group_index = 2,
@@ -173,6 +179,8 @@ return {
 			"hrsh7th/cmp-path",
 			"hrsh7th/cmp-nvim-lua",
 			"ray-x/cmp-treesitter",
+      "tzachar/cmp-ai", -- Add cmp-ai as dependency
+      "folke/lazydev.nvim",
 		},
 	},
 }

@@ -45,6 +45,10 @@ if [ -f ~/dotfiles/zsh/zsh_aliases/project.zsh ]; then
     source ~/dotfiles/zsh/zsh_aliases/project.zsh 
 fi
 
+if [ -f ~/dotfiles/zsh/zsh_aliases/ai.zsh ]; then
+    source ~/dotfiles/zsh/zsh_aliases/ai.zsh 
+fi
+
 #export PYTHON=/Users/myemets/.pyenv/shims/python3
 export PYTHON=/Users/myemets/.pyenv/shims/python2
 alias python='python3.12'

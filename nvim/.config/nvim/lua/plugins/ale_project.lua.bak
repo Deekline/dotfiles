@@ -1,0 +1,41 @@
+return {
+	"dense-analysis/ale",
+	lazy = false,
+	config = function()
+		local g = vim.g
+		g.ale_ruby_rubocop_auto_correct_all = 1
+		g.ale_set_highlights = 0
+		g.ale_disable = 0
+		
+		g.ale_linters = {
+			lua = { "stylua" },
+			vue = { "volar", "eslint" },
+		}
+		g.ale_fixers = {
+			vue = { "eslint" },
+			javascript = { "eslint" },
+			typescript = { "eslint" },
+			lua = { "stylua" },
+		}
+		
+		-- Linting options
+		g.ale_javascript_eslint_executable = "eslint"
+		g.ale_javascript_eslint_options = "--resolve-plugins-relative-to /Users/myemets/.nvm/versions/node/v18.20.5/lib/node_modules/@core/vue-cli"
+		g.ale_javascript_eslint_use_global = 1
+		
+		g.ale_vue_eslint_executable = "eslint"
+		g.ale_vue_eslint_options = "--resolve-plugins-relative-to /Users/myemets/.nvm/versions/node/v18.20.5/lib/node_modules/@core/vue-cli"
+		
+		-- FIXING options (remove --fix-dry-run, use --fix)
+		g.ale_javascript_eslint_fix_options = "--fix --resolve-plugins-relative-to /Users/myemets/.nvm/versions/node/v18.20.5/lib/node_modules/@core/vue-cli"
+		g.ale_vue_eslint_fix_options = "--fix --resolve-plugins-relative-to /Users/myemets/.nvm/versions/node/v18.20.5/lib/node_modules/@core/vue-cli"
+		
+		g.ale_fix_on_save = 1
+		
+		vim.cmd([[
+			autocmd BufEnter *.vue let b:ale_linters = ['eslint', 'volar']
+			autocmd BufEnter *.vue let b:ale_fixers = ['eslint']
+		]])
+		vim.cmd("ALEEnable")
+	end,
+}
