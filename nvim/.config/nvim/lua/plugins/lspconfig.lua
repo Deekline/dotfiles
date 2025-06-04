@@ -173,30 +173,67 @@ return {
 				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact" },
 				root_dir = util.root_pattern("tsconfig.json", "jsconfig.json", "package.json", ".git"),
 				init_options = {
-					plugins = {
-						{
-							name = "@vue/typescript-plugin",
-							location = "/Users/myemets/.local/share/nvim/mason/packages/vue-language-server/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin",
-							languages = { "vue" },
-						},
+					preferences = {
+						includePackageJsonAutoImports = "auto",
+						includeCompletionsForModuleExports = true,
+						includeAutomaticOptionalChainCompletions = true,
+						includeCompletionsWithSnippetText = true,
+						includeCompletionsForImportStatements = true,
 					},
 					typescript = {
 						tsdk = tsdk(),
 					},
 				},
 				settings = {
-					ts_ls = {
-						configFile = "/Users/myemets/WebstormProjects/Macys/Vue/pdp/tsconfig.json",
+					typescript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "literal",
+							includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = false,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+							includeInlayEnumMemberValueHints = true,
+						},
+						preferences = {
+							includeCompletionsForModuleExports = true,
+							includePackageJsonAutoImports = "auto",
+						},
+						suggest = {
+							includeCompletionsForModuleExports = true,
+						},
+					},
+					javascript = {
+						inlayHints = {
+							includeInlayParameterNameHints = "literal",
+							includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+							includeInlayFunctionParameterTypeHints = true,
+							includeInlayVariableTypeHints = false,
+							includeInlayPropertyDeclarationTypeHints = true,
+							includeInlayFunctionLikeReturnTypeHints = true,
+							includeInlayEnumMemberValueHints = true,
+						},
+						preferences = {
+							includePackageJsonAutoImports = "auto",
+						},
 					},
 				},
+				on_attach = function(client, bufnr)
+					-- Force project reload to ensure paths are loaded correctly
+					vim.defer_fn(function()
+						client.request("workspace/executeCommand", {
+							command = "typescript.reloadProjects",
+						})
+					end, 1000)
+				end,
 			},
 			volar = {
 				cmd = { "vue-language-server", "--stdio" },
-				filetypes = { "javascript", "javascriptreact", "typescript", "typescriptreact", "vue", "scss" },
+				filetypes = { "vue", "scss" },
 				root_dir = util.root_pattern("package.json"),
 				init_options = {
 					vue = {
-						hybridMode = true,
+						hybridMode = false,
 					},
 					typescript = {
 						tsdk = "", -- This will be set dynamically in setup

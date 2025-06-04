@@ -6,8 +6,8 @@ command("PersistenceLoad", function()
 end, {})
 
 acmd("FileType", {
-  pattern = "oil",
-  callback = function()
-    vim.keymap.set("n", "q", "<cmd>lua require('oil').close()<cr>", { buffer = true })
-  end,
+	pattern = "oil",
+	callback = function()
+		vim.keymap.set("n", "q", "<cmd>lua require('oil').close()<cr>", { buffer = true })
+	end,
 })
