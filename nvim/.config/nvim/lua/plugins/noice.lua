@@ -21,6 +21,14 @@ return {
 				},
 				view = "mini",
 			},
+			-- Add this route to show macro recording messages
+			{
+				filter = {
+					event = "msg_showmode",
+					find = "recording",
+				},
+				view = "notify",
+			},
 		},
 		presets = {
 			bottom_search = true,
