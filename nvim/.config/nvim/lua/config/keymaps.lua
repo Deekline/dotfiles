@@ -23,8 +23,8 @@ map("v", "<A-j>", ":<C-u>execute \"'<,'>move '>+\" . v:count1<cr>gv=gv", { desc 
 map("v", "<A-k>", ":<C-u>execute \"'<,'>move '<-\" . (v:count1 + 1)<cr>gv=gv", { desc = "Move Up" })
 
 -- buffers
-map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
-map("n", "<leader>bb", "<cmd>bnext<cr>", { desc = "Next Buffer" })
+-- map("n", "<leader>bp", "<cmd>bprevious<cr>", { desc = "Prev Buffer" })
+-- map("n", "<leader>bb", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>`", "<cmd>e #<cr>", { desc = "Switch to Other Buffer" })
 map("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 
