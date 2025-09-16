@@ -174,7 +174,8 @@ local keys = {
 	m("<leader>fk", [[Telescope keymaps]], {}, { desc = "Find keymaps" }),
 	m("<leader>ft", [[Telescope help_tags]], {}, { desc = "Find help_tags" }),
 	m("<leader>ff", [[TelescopeFindFilesPreview]], {}, { desc = "Find Files Preview" }),
-	m("<leader>fj", [[Telescope live_grep]], {}, { desc = "Find with grep" }),
+	m("<leader>fj", [[TelescopeLiveGrepNoTestsAndMock]], {}, { desc = "Find with grep without test and mocks" }),
+	-- m("<leader>fj", [[Telescope live_grep]], {}, { desc = "Find with grep" }),
 	m("<leader>fJ", [[TelescopeLiveGrepHidden]], {}, { desc = "Find with grep hidden" }),
 	m("<leader>fe", [[TelescopeFindFilesNoIgnore]], {}, { desc = "Find Files No Ignore" }),
 	m("<leader>fb", [[Telescope buffers]], {}, { desc = "Telescope buffers" }),
@@ -241,6 +242,32 @@ return {
 		create_cmd("TelescopeLiveGrepHidden", function()
 			require("telescope.builtin").live_grep({
 				additional_args = { "--ignore" },
+			})
+		end)
+		create_cmd("TelescopeLiveGrepNoTestsAndMock", function()
+			require("telescope.builtin").live_grep({
+				additional_args = function()
+					return {
+						"--no-config",
+						"--hidden",
+						-- exclude dirs anywhere in the tree
+						"-g",
+						"!**/mocks/**",
+						"-g",
+						"!**/mock/**",
+						"-g",
+						"!**/test/**",
+						"-g",
+						"!**/tests/**",
+						"-g",
+						"!**/__tests__/**",
+						-- exclude common test/mock filename patterns
+						"-g",
+						"!**/*.{test,spec}.{js,jsx,ts,tsx}",
+						"-g",
+						"!**/*.mock.{js,jsx,ts,tsx}",
+					}
+				end,
 			})
 		end)
 	end,
