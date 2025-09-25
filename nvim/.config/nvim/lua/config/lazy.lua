@@ -14,8 +14,6 @@ if not (vim.uv or vim.loop).fs_stat(lazypath) then
 	end
 end
 vim.opt.rtp:prepend(lazypath)
-require("config.options")
-require("config.user_commands")
 -- Setup lazy.nvim
 require("lazy").setup({
 	spec = {
@@ -28,4 +26,3 @@ require("lazy").setup({
 	-- automatically check for plugin updates
 	checker = { enabled = true },
 })
-require("config.keymaps")

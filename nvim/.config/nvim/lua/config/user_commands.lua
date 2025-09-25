@@ -1,4 +1,5 @@
 local command = vim.api.nvim_create_user_command
+local map = vim.keymap.set
 local acmd = vim.api.nvim_create_autocmd
 
 command("PersistenceLoad", function()
@@ -8,6 +9,6 @@ end, {})
 acmd("FileType", {
 	pattern = "oil",
 	callback = function()
-		vim.keymap.set("n", "q", "<cmd>lua require('oil').close()<cr>", { buffer = true })
+		map("n", "q", "<cmd>lua require('oil').close()<cr>", { buffer = true })
 	end,
 })
