@@ -1,1 +1,6 @@
-require('config.lazy');
+require("config.mason_path")
+require("config.lsp")
+require("config.options")
+require("config.user_commands")
+require("config.lazy")
+require("config.keymaps")
