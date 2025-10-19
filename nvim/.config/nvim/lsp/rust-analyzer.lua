@@ -6,9 +6,14 @@ return {
 		["rust-analyzer"] = {
 			check = {
 				command = "clippy",
+        allTargets = true,
+        features = "all",
+        extraArgs = { "--tests" },
 			},
 			diagnostics = {
 				enable = true,
+        experimental = { enable = true },
+
 			},
 		},
 	},

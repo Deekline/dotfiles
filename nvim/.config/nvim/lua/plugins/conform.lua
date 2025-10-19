@@ -1,48 +1,47 @@
 return {
 	"stevearc/conform.nvim",
-	lazy = false,
-	config = function()
-		local conform = require("conform")
-
-		conform.setup({
+	event = "BufWritePre",
+	opts = function()
+		local util = require("conform.util")
+		return {
 			formatters_by_ft = {
 				lua = { "stylua" },
-				vue = { "eslint_d" },
-				javascript = { "eslint_d" },
-				typescript = { "eslint_d" },
+				javascript = { "prettierd" },
+				typescript = { "prettierd" },
+				vue = { "prettierd" },
+				json = { "prettierd" },
+				markdown = { "prettierd" },
+				yaml = { "prettierd" },
 			},
-
-			-- Configure eslint_d (which supports fixing via stdin)
 			formatters = {
-				eslint_d = {
-					command = "eslint_d",
-					args = {
-						"--fix-to-stdout",
-						"--stdin",
-						"--stdin-filename",
-						"$FILENAME",
-						"--resolve-plugins-relative-to",
-						"/Users/myemets/.nvm/versions/node/v18.20.5/lib/node_modules/@core/vue-cli",
-					},
-					stdin = true,
+				prettierd = {
+					-- run from project root so it finds your .prettierrc / package.json
+					cwd = util.root_file({
+						".prettierrc",
+						".prettierrc.json",
+						".prettierrc.yml",
+						".prettierrc.yaml",
+						".prettierrc.js",
+						".prettierrc.cjs",
+						"prettier.config.js",
+						"prettier.config.cjs",
+						"package.json",
+						".git",
+					}),
+					-- do NOT set PRETTIERD_LOCAL_PRETTIER_ONLY unless you’re 100% sure
+					-- a local prettier is installed. We already installed it in step 1.
 				},
 			},
-
-			-- Format on save
-			format_on_save = {
-				lsp_fallback = true,
-				async = false,
-				timeout_ms = 3000,
-			},
-		})
-
-		-- Manual formatting keymap
-		vim.keymap.set({ "n", "v" }, "<leader>lf", function()
-			conform.format({
-				lsp_fallback = true,
-				async = false,
-				timeout_ms = 3000,
-			})
-		end, { desc = "Format file or range" })
+			format_on_save = { lsp_fallback = false, timeout_ms = 3000 },
+		}
 	end,
+	keys = {
+		{
+			"<leader>cf",
+			function()
+				require("conform").format({ async = false, lsp_fallback = false })
+			end,
+			desc = "Format file",
+		},
+	},
 }

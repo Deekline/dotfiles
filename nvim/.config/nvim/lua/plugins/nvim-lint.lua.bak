@@ -1,0 +1,98 @@
+return {
+	"mfussenegger/nvim-lint",
+	event = { "BufReadPost", "BufNewFile", "BufWritePost" },
+	config = function()
+		local lint = require("lint")
+
+		-- keep builtin ESLint parser
+		local builtin = require("lint.linters.eslint")
+		local builtin_parser = builtin.parser
+
+		-- ---------- helpers ----------
+		local function bufname(bufnr)
+			bufnr = bufnr or 0
+			return vim.api.nvim_buf_get_name(bufnr)
+		end
+
+		local function find_up(markers, start_dir)
+			start_dir = start_dir or vim.loop.cwd()
+			local found = vim.fs.find(markers, { upward = true, path = start_dir })[1]
+			return found and vim.fs.dirname(found) or nil
+		end
+
+		local function project_root()
+			local start = vim.fn.fnamemodify(bufname(0), ":p:h")
+			return find_up(
+				{ "eslint.config.mjs", "eslint.config.js", "eslint.config.cjs", "package.json", ".git" },
+				start
+			) or vim.loop.cwd()
+		end
+
+		local function eslint_bin()
+			local start = vim.fn.fnamemodify(bufname(0), ":p:h")
+			local local_bin = vim.fs.find({ "node_modules/.bin/eslint" }, { upward = true, path = start })[1]
+			local exepath = vim.fn.exepath("eslint")
+			return local_bin or (exepath ~= "" and exepath) or nil
+		end
+		-- ---------- /helpers ----------
+
+		-- ESLint runner (filename mode)
+		lint.linters.eslint = {
+			cmd = function()
+				local cmd = eslint_bin()
+				if not cmd then
+					vim.notify(
+						"[nvim-lint] eslint not found (node_modules/.bin/eslint nor in $PATH)",
+						vim.log.levels.ERROR
+					)
+				end
+				return cmd
+			end,
+			stdin = false, -- run on file path
+			append_fname = true, -- let nvim-lint append current file
+			ignore_exitcode = true, -- don't treat lint errors as command failure
+			stream = "both",
+			cwd = function()
+				return project_root()
+			end,
+			args = { "-f", "json" }, -- JSON for builtin parser
+			parser = function(output, bufnr, cwd)
+				if not output or output == "" then
+					return {}
+				end
+				local i = output:find("%[", 1, true)
+				local clean = i and output:sub(i) or output
+				return builtin_parser(clean, bufnr, cwd)
+			end,
+		}
+
+		lint.linters_by_ft = {
+			javascript = { "eslint" },
+			typescript = { "eslint" },
+			javascriptreact = { "eslint" },
+			typescriptreact = { "eslint" },
+			vue = { "eslint" },
+		}
+
+		-- autos + manual trigger
+		local grp = vim.api.nvim_create_augroup("NvimLintAuto", { clear = true })
+		vim.api.nvim_create_autocmd({ "BufWritePost", "BufReadPost" }, {
+			group = grp,
+			callback = function()
+				require("lint").try_lint()
+			end,
+		})
+
+		vim.keymap.set("n", "<leader>ll", function()
+			require("lint").try_lint()
+			vim.diagnostic.open_float(nil, { focus = false })
+		end, { desc = "Lint file (eslint)" })
+
+		-- quick debug helpers
+		vim.api.nvim_create_user_command("EslintWhich", function()
+			vim.notify(
+				("eslint: %s\nroot: %s\nfile: %s"):format(eslint_bin() or "NOT FOUND", project_root(), bufname(0))
+			)
+		end, {})
+	end,
+}
