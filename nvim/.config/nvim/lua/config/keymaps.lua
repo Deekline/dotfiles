@@ -28,7 +28,7 @@ map("n", "<leader>bD", "<cmd>:bd<cr>", { desc = "Delete Buffer and Window" })
 -- Clear search, diff update and redraw
 map(
 	"n",
-	"<leader>sc",
+	"<leader>/",
 	"<Cmd>nohlsearch<Bar>diffupdate<Bar>normal! <C-L><CR>",
 	{ desc = "Redraw / Clear hlsearch / Diff Update" }
 )
@@ -47,7 +47,7 @@ map("i", ".", ".<c-g>u")
 map("i", ";", ";<c-g>u")
 
 -- save file
-map({ "i", "x", "n", "s" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "Save File" })
+map({ "n" }, "<leader>w", "<cmd>w<cr><esc>", { desc = "Save File" })
 
 -- better indenting
 map("v", "<", "<gv")
