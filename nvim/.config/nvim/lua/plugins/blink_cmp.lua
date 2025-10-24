@@ -56,7 +56,6 @@ return {
 		require("blink.cmp").setup(opts)
 
 		link("BlinkCmpMenuSelection", "CursorLine") -- selected item
-		vim.api.nvim_create_autocmd("ColorScheme", { callback = ensure_selection_hl })
 	end,
 
 	opts_extend = { "sources.default" },
