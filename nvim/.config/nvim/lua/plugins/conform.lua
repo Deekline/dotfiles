@@ -1,47 +1,54 @@
 return {
 	"stevearc/conform.nvim",
-	event = "BufWritePre",
-	opts = function()
-		local util = require("conform.util")
-		return {
+	event = { "BufReadPre", "BufNewFile" },
+	config = function()
+		local conform = require("conform")
+
+		conform.setup({
 			formatters_by_ft = {
+				-- Web development
+				javascript = { "prettier" },
+				typescript = { "prettier" },
+				javascriptreact = { "prettier" },
+				typescriptreact = { "prettier" },
+				css = { "prettier" },
+				html = { "prettier" },
+				json = { "prettier" },
+				yaml = { "prettier" },
+				markdown = { "prettier" },
+				graphql = { "prettier" },
 				lua = { "stylua" },
-				javascript = { "prettierd" },
-				typescript = { "prettierd" },
-				vue = { "prettierd" },
-				json = { "prettierd" },
-				markdown = { "prettierd" },
-				yaml = { "prettierd" },
+				go = { "gofmt", "goimports" },
+				rust = { "rustfmt" },
+				sh = { "shfmt" },
+				bash = { "shfmt" },
+				zsh = { "shfmt" },
+				-- Use the "*" filetype to run formatters on all filetypes
+				["*"] = { "trim_whitespace" },
 			},
+			default_format_opts = {
+				lsp_format = "fallback",
+			},
+			-- Set up format-on-save
+			format_on_save = {
+				timeout_ms = 500,
+				lsp_format = "fallback",
+			},
+			-- Customize formatters
 			formatters = {
-				prettierd = {
-					-- run from project root so it finds your .prettierrc / package.json
-					cwd = util.root_file({
-						".prettierrc",
-						".prettierrc.json",
-						".prettierrc.yml",
-						".prettierrc.yaml",
-						".prettierrc.js",
-						".prettierrc.cjs",
-						"prettier.config.js",
-						"prettier.config.cjs",
-						"package.json",
-						".git",
-					}),
-					-- do NOT set PRETTIERD_LOCAL_PRETTIER_ONLY unless you’re 100% sure
-					-- a local prettier is installed. We already installed it in step 1.
+				shfmt = {
+					prepend_args = { "-i", "2" }, -- 2 spaces indentation
 				},
 			},
-			format_on_save = { lsp_fallback = false, timeout_ms = 3000 },
-		}
+		})
+
+		-- Keybindings
+		vim.keymap.set({ "n", "v" }, "<leader>lf", function()
+			conform.format({
+				lsp_format = "fallback",
+				async = false,
+				timeout_ms = 500,
+			})
+		end, { desc = "Format file or range (in visual mode)" })
 	end,
-	keys = {
-		{
-			"<leader>cf",
-			function()
-				require("conform").format({ async = false, lsp_fallback = false })
-			end,
-			desc = "Format file",
-		},
-	},
 }
