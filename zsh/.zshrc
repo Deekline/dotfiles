@@ -42,11 +42,11 @@ export NVM_DIR="$HOME/.nvm"
 export PATH="${HOME}/.pyenv/shims:${PATH}"
 
 if [ -f ~/dotfiles/zsh/zsh_aliases/project.zsh ]; then
-    source ~/dotfiles/zsh/zsh_aliases/project.zsh 
+    source ~/dotfiles/zsh/zsh_aliases/project.zsh
 fi
 
 if [ -f ~/dotfiles/zsh/zsh_aliases/ai.zsh ]; then
-    source ~/dotfiles/zsh/zsh_aliases/ai.zsh 
+    source ~/dotfiles/zsh/zsh_aliases/ai.zsh
 fi
 
 #export PYTHON=/Users/myemets/.pyenv/shims/python3
@@ -116,6 +116,7 @@ _fzf_comprun() {
 # ---- Eza (better ls) -----
 
 alias ls="eza --color=always --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
+alias la="eza --color=always --long --git --icons=always --no-time"
 alias lt="eza --color=always --tree --level=2  --long --git --no-filesize --icons=always --no-time --no-user --no-permissions"
 
 
