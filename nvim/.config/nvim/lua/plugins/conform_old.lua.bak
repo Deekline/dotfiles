@@ -12,12 +12,17 @@ return {
 				lua = { "stylua" },
 			},
 			formatters = {
-				eslint = {
-					-- use your global eslint (or set to Mason path)
-					command = "eslint",
-					args = { "--fix-dry-run", "--stdin", "--stdin-filename", "$FILENAME" },
+				eslint_d = {
+					command = "eslint_d",
+					args = {
+						"--fix-to-stdout",
+						"--stdin",
+						"--stdin-filename",
+						"$FILENAME",
+						"--resolve-plugins-relative-to",
+						"/Users/myemets/.nvm/versions/node/v18.20.5/lib/node_modules/@core/vue-cli",
+					},
 					stdin = true,
-					-- no cwd/condition -> no ctx -> no health crash
 				},
 			},
 			format_on_save = { lsp_fallback = true, async = false, timeout_ms = 3000 },
