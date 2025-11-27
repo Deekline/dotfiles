@@ -21,6 +21,8 @@ opt.fillchars = {
 	eob = " ",
 }
 opt.foldlevel = 99
+opt.foldenable = true
+opt.foldexpr = "nvim_treesitter#foldexpr()"
 opt.ignorecase = true -- Ignore case
 opt.inccommand = "nosplit" -- preview incremental substitute
 opt.jumpoptions = "view"

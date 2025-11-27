@@ -25,9 +25,24 @@ return {
 			hybridMode = false, -- Disable for inlay hints support
 		},
 		-- Only set typescript config if we have a valid TypeScript installation
-		typescript = get_typescript_sdk() and {
-			tsdk = get_typescript_sdk(),
-		} or nil,
+		typescript = get_typescript_sdk()
+				and {
+					tsdk = get_typescript_sdk(),
+					inlayHints = {
+						enumMemberValues = { enabled = true },
+						functionLikeReturnTypes = { enabled = true },
+						propertyDeclarationTypes = { enabled = true },
+						parameterNames = {
+							enabled = "all", -- "none" | "literals" | "all"
+							suppressWhenArgumentMatchesName = true,
+						},
+						variableTypes = {
+							enabled = true,
+							suppressWhenTypeMatchesName = true,
+						},
+					},
+				}
+			or nil,
 	},
 	settings = {
 		-- Remove TypeScript-specific settings to avoid conflicts with ts-ls

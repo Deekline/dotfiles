@@ -42,12 +42,102 @@ vim.diagnostic.config({
 })
 
 -- extras --
+local MAX_HINT_LEN = 40 -- adjust as you like
+
+local default_inlay_handler = vim.lsp.handlers["textDocument/inlayHint"]
+
+vim.lsp.handlers["textDocument/inlayHint"] = function(err, result, ctx, config)
+	if result and ctx and ctx.client_id then
+		local client = vim.lsp.get_client_by_id(ctx.client_id)
+
+		-- Only truncate for TS / Vue (adjust names to match :LspInfo)
+		local truncate_for = {
+			["ts-ls"] = true,
+			["typescript-language-server"] = true,
+			["vue-ls"] = true,
+			["vue-language-server"] = true,
+		}
+
+		if client and truncate_for[client.name] then
+			for _, hint in ipairs(result) do
+				local label = hint.label
+
+				-- label can be string or array of parts
+				local full = ""
+				if type(label) == "string" then
+					full = label
+				elseif type(label) == "table" then
+					for _, part in ipairs(label) do
+						full = full .. (part.value or "")
+					end
+				end
+
+				if #full > MAX_HINT_LEN then
+					local truncated = full:sub(1, MAX_HINT_LEN - 3) .. "..."
+
+					if type(label) == "string" then
+						hint.label = truncated
+					else
+						-- keep it simple: single part
+						hint.label = { { value = truncated } }
+					end
+				end
+			end
+		end
+	end
+
+	return default_inlay_handler(err, result, ctx, config)
+end
+
+local function go_to_source()
+	local bufnr = vim.api.nvim_get_current_buf()
+	local clients = vim.lsp.get_clients({ bufnr = bufnr })
+
+	local client
+	for _, c in ipairs(clients) do
+		if
+			c.name == "ts-ls"
+			or c.name == "typescript-language-server"
+			or c.name == "vue-ls"
+			or c.name == "vue-language-server"
+		then
+			client = c
+			break
+		end
+	end
+	if not client then
+		return
+	end
+
+	local pos = vim.api.nvim_win_get_cursor(0)
+
+	client.request("workspace/executeCommand", {
+		command = "_typescript.goToSourceDefinition",
+		arguments = {
+			vim.uri_from_bufnr(bufnr),
+			{ line = pos[1] - 1, character = pos[2] },
+		},
+	}, function(_, result)
+		if result and result[1] then
+			vim.lsp.util.jump_to_location(result[1], "utf-8")
+		end
+	end, bufnr)
+end
 
 acmd("LspAttach", {
 	group = vim.api.nvim_create_augroup("UserLspConfig", {}),
 	callback = function(ev)
 		local tele = require("telescope.builtin")
 		map({ "n" }, "gd", tele.lsp_definitions, { buffer = ev.buffer, desc = "LSP: Go to definitions" })
+		map({ "n" }, "gR", "<cmd>Telescope lsp_references<CR>", { desc = "Show LSP reference" })
+		map({ "n" }, "<leader>gs", go_to_source, { buffer = ev.buffer, desc = "Go to source" })
+		map({ "n" }, "gi", "<cmd>Telescope lsp_implementations<CR>", { desc = "Go to Implementation" })
+		map({ "n" }, "<leader>rs", ":LspRestart<CR>", { desc = "Restart LSP" })
+
+		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		if client and client.server_capabilities.inlayHintProvider then
+			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
+		end
 	end,
 })
 
@@ -63,10 +153,6 @@ local function restart_lsp(bufnr)
 		vim.cmd("edit")
 	end, 100)
 end
-
-vim.api.nvim_create_user_command("LspRestart", function()
-	restart_lsp()
-end, {})
 
 local function lsp_status()
 	local bufnr = vim.api.nvim_get_current_buf()
