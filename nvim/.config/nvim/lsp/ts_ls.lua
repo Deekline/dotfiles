@@ -7,7 +7,18 @@ return {
 		"typescript",
 		"typescriptreact",
 		"typescript.tsx",
-		-- "vue"
+		"vue",
+	},
+	init_options = {
+		plugins = {
+			{
+				languages = { "vue" },
+				location = vim.fn.stdpath("data")
+					.. "/mason/packages/vue-language-server/node_modules/@vue/language-server",
+				name = "@vue/typescript-plugin",
+				configNamespace = "typescript",
+			},
+		},
 	},
 	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
 	settings = {

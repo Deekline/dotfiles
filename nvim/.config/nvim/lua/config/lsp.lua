@@ -5,12 +5,12 @@ local map = vim.keymap.set
 vim.lsp.enable({
 	"lua-ls",
 	"gopls",
-	"ts-ls",
+	"ts_ls",
 	"rust-analyzer",
-	"tailwindcss",
+	-- "tailwindcss",
 	"html-ls",
 	"css-ls",
-	"vue-ls",
+	"vue_ls",
 	--"vtsls",
 })
 
@@ -52,9 +52,9 @@ vim.lsp.handlers["textDocument/inlayHint"] = function(err, result, ctx, config)
 
 		-- Only truncate for TS / Vue (adjust names to match :LspInfo)
 		local truncate_for = {
-			["ts-ls"] = true,
+			["ts_ls"] = true,
 			["typescript-language-server"] = true,
-			["vue-ls"] = true,
+			["vue_ls"] = true,
 			["vue-language-server"] = true,
 		}
 
@@ -96,9 +96,9 @@ local function go_to_source()
 	local client
 	for _, c in ipairs(clients) do
 		if
-			c.name == "ts-ls"
+			c.name == "ts_ls"
 			or c.name == "typescript-language-server"
-			or c.name == "vue-ls"
+			or c.name == "vue_ls"
 			or c.name == "vue-language-server"
 		then
 			client = c

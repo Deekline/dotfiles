@@ -4,7 +4,10 @@ end
 
 return {
 	"saghen/blink.cmp",
-	dependencies = { "rafamadriz/friendly-snippets" },
+	event = { "InsertEnter", "LspAttach" }, -- ensure it's available in insert, but still after an LSP attach
+	dependencies = {
+		"rafamadriz/friendly-snippets",
+	},
 	version = "1.*",
 	opts = {
 		keymap = {
