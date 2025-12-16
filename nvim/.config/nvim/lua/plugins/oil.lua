@@ -25,16 +25,6 @@ return {
 			win_options = {},
 		},
 	},
-	config = function(_, opts)
-		require("oil").setup(opts)
-
-		vim.api.nvim_create_autocmd("User", {
-			pattern = "OilEnter",
-			callback = function()
-				require("oil").open_preview()
-			end,
-		})
-	end,
 	dependencies = { { "nvim-tree/nvim-web-devicons", opts = {} } }, -- use if you prefer nvim-web-devicons
 	lazy = false,
 }
