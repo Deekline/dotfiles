@@ -6,10 +6,10 @@ return {
 		require("tiny-inline-diagnostic").setup({
 			-- Choose a preset style for diagnostic appearance
 			-- Available: "modern", "classic", "minimal", "powerline", "ghost", "simple", "nonerdfont", "amongus"
-			preset = "modern",
+			preset = "ghost",
 
 			-- Make diagnostic background transparent
-			transparent_bg = true,
+			transparent_bg = false,
 
 			-- Make cursorline background transparent for diagnostics
 			transparent_cursorline = true,
