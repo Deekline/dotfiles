@@ -1,26 +1,110 @@
-local vue_language_server_path = vim.fn.stdpath("data")
-	.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+local function resolve_tsdk(root_dir)
+	if root_dir then
+		local local_tsdk = root_dir .. "/node_modules/typescript/lib"
+		if vim.fn.isdirectory(local_tsdk) == 1 then
+			return local_tsdk
+		end
+	end
 
-local vue_plugin = {
-	name = "@vue/typescript-plugin",
-	location = vue_language_server_path,
-	languages = { "vue" },
-	configNamespace = "typescript",
-}
+	local mason_tsdk = vim.fn.stdpath("data")
+		.. "/mason/packages/typescript-language-server/node_modules/typescript/lib"
+	if vim.fn.isdirectory(mason_tsdk) == 1 then
+		return mason_tsdk
+	end
+
+	local global_root = vim.fn.system("npm root -g"):gsub("\n", ""):gsub("\r", "")
+	local global_tsdk = global_root .. "/typescript/lib"
+	if vim.fn.isdirectory(global_tsdk) == 1 then
+		return global_tsdk
+	end
+
+	return nil
+end
+
+local function resolve_vue_plugin(root_dir)
+	if root_dir then
+		local local_path = root_dir .. "/node_modules/@vue/language-server"
+		if vim.fn.isdirectory(local_path) == 1 then
+			return local_path
+		end
+	end
+
+	local mason_path = vim.fn.stdpath("data")
+		.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
+	if vim.fn.isdirectory(mason_path) == 1 then
+		return mason_path
+	end
+
+	return nil
+end
+
+local function build_vue_plugin(path)
+	if not path then
+		return nil
+	end
+
+	return {
+		name = "@vue/typescript-plugin",
+		location = path,
+		languages = { "vue" },
+		configNamespace = "typescript",
+	}
+end
 
 return {
 	cmd = { "vtsls", "--stdio" },
+	filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "vue" },
+	root_markers = { "tsconfig.json", "jsconfig.json", "package.json", ".git" },
+	single_file_support = true,
 	settings = {
 		vtsls = {
+			autoUseWorkspaceTsdk = true,
 			tsserver = {
-				globalPlugins = {
-					vue_plugin,
-				},
+				globalPlugins = {},
+			},
+		},
+		typescript = {
+			validate = { enable = true },
+			tsserver = {
+				useSyntaxServer = "auto",
+				nodePath = "/Users/myemets/.nvm/versions/node/v22.13.1/bin/node",
+				maxTsServerMemory = 4096,
+				watchOptions = "vscode",
+				enableRegionDiagnostics = true,
+			},
+			inlayHints = {
+				includeInlayParameterNameHints = "none",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+				includeInlayFunctionParameterTypeHints = false,
+				includeInlayVariableTypeHints = false,
+				includeInlayVariableTypeHintsWhenTypeMatchesName = false,
+				includeInlayPropertyDeclarationTypeHints = false,
+				includeInlayFunctionLikeReturnTypeHints = false,
+				includeInlayEnumMemberValueHints = false,
 			},
 		},
 	},
+	before_init = function(params, config)
+		local root_dir = config.root_dir
+		if not root_dir and params.rootUri then
+			root_dir = vim.uri_to_fname(params.rootUri)
+		end
+
+		local tsdk = resolve_tsdk(root_dir)
+		if tsdk then
+			config.settings.vtsls.typescript = config.settings.vtsls.typescript or {}
+			config.settings.vtsls.typescript.globalTsdk = tsdk
+		end
+
+		local vue_plugin_path = resolve_vue_plugin(root_dir)
+		local vue_plugin = build_vue_plugin(vue_plugin_path)
+		if vue_plugin then
+			config.settings.vtsls.tsserver.globalPlugins = { vue_plugin }
+		else
+			config.settings.vtsls.tsserver.globalPlugins = {}
+		end
+	end,
 	init_options = {
 		hostInfo = "neovim",
 	},
-	filetypes = { "typescript", "javascript", "javascriptreact", "typescriptreact", "vue" },
 }

@@ -5,13 +5,13 @@ local map = vim.keymap.set
 vim.lsp.enable({
 	"lua-ls",
 	"gopls",
-	"ts_ls",
+	-- "ts_ls",
 	"rust-analyzer",
 	-- "tailwindcss",
 	"html-ls",
 	"css-ls",
 	"vue_ls",
-	--"vtsls",
+	"vtsls",
 })
 
 vim.diagnostic.config({
@@ -52,7 +52,7 @@ vim.lsp.handlers["textDocument/inlayHint"] = function(err, result, ctx, config)
 
 		-- Only truncate for TS / Vue (adjust names to match :LspInfo)
 		local truncate_for = {
-			["ts_ls"] = true,
+			["vtstl"] = true,
 			["typescript-language-server"] = true,
 			["vue_ls"] = true,
 			["vue-language-server"] = true,
@@ -95,24 +95,30 @@ local function go_to_source()
 
 	local client
 	for _, c in ipairs(clients) do
-		if
-			c.name == "ts_ls"
-			or c.name == "typescript-language-server"
-			or c.name == "vue_ls"
-			or c.name == "vue-language-server"
-		then
+		if c.name == "vtsls" then
 			client = c
 			break
 		end
 	end
+
+	if not client then
+		for _, c in ipairs(clients) do
+			if c.name == "vue_ls" or c.name == "vue-language-server" then
+				client = c
+				break
+			end
+		end
+	end
+
 	if not client then
 		return
 	end
 
 	local pos = vim.api.nvim_win_get_cursor(0)
+	local command = client.name == "vtsls" and "typescript.goToSourceDefinition" or "_typescript.goToSourceDefinition"
 
 	client.request("workspace/executeCommand", {
-		command = "_typescript.goToSourceDefinition",
+		command = command,
 		arguments = {
 			vim.uri_from_bufnr(bufnr),
 			{ line = pos[1] - 1, character = pos[2] },
@@ -120,7 +126,9 @@ local function go_to_source()
 	}, function(_, result)
 		if result and result[1] then
 			vim.lsp.util.jump_to_location(result[1], "utf-8")
+			return
 		end
+		vim.lsp.buf.definition()
 	end, bufnr)
 end
 
