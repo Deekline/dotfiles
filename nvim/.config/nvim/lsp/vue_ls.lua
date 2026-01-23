@@ -37,11 +37,11 @@ local tsdk = get_typescript_sdk()
 
 return {
 	cmd = { "vue-language-server", "--stdio" },
-	filetypes = { "vue" },
+	filetypes = { "" },
 	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
 	init_options = {
 		vue = {
-			hybridMode = false,
+			hybridMode = true,
 		},
 
 		typescript = tsdk and {

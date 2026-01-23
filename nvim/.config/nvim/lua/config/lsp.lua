@@ -143,6 +143,9 @@ acmd("LspAttach", {
 		map({ "n" }, "<leader>rs", ":LspRestart<CR>", { desc = "Restart LSP" })
 
 		local client = vim.lsp.get_client_by_id(ev.data.client_id)
+		--	if client and (client.name == "vue_ls" or client.name == "vue-language-server") then
+		--		client.server_capabilities.completionProvider = nil
+		--	end
 		if client and client.server_capabilities.inlayHintProvider then
 			vim.lsp.inlay_hint.enable(true, { bufnr = ev.buf })
 		end

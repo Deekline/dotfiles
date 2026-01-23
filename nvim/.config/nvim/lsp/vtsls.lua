@@ -22,17 +22,23 @@ local function resolve_tsdk(root_dir)
 end
 
 local function resolve_vue_plugin(root_dir)
+	local candidates = {}
+
 	if root_dir then
-		local local_path = root_dir .. "/node_modules/@vue/language-server"
-		if vim.fn.isdirectory(local_path) == 1 then
-			return local_path
-		end
+		table.insert(candidates, root_dir .. "/node_modules/@vue/typescript-plugin")
+		table.insert(candidates, root_dir .. "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin")
 	end
 
-	local mason_path = vim.fn.stdpath("data")
-		.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
-	if vim.fn.isdirectory(mason_path) == 1 then
-		return mason_path
+	table.insert(
+		candidates,
+		vim.fn.stdpath("data")
+			.. "/mason/packages/vue-language-server/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin"
+	)
+
+	for _, path in ipairs(candidates) do
+		if vim.fn.isdirectory(path) == 1 then
+			return path
+		end
 	end
 
 	return nil
@@ -51,6 +57,9 @@ local function build_vue_plugin(path)
 	}
 end
 
+local vue_plugin_path = resolve_vue_plugin(vim.fn.getcwd())
+local vue_plugin = build_vue_plugin(vue_plugin_path)
+
 return {
 	cmd = { "vtsls", "--stdio" },
 	filetypes = { "typescript", "typescriptreact", "javascript", "javascriptreact", "vue" },
@@ -58,9 +67,9 @@ return {
 	single_file_support = true,
 	settings = {
 		vtsls = {
-			autoUseWorkspaceTsdk = true,
+			--autoUseWorkspaceTsdk = true,
 			tsserver = {
-				globalPlugins = {},
+				globalPlugins = vue_plugin and { vue_plugin } or {},
 			},
 		},
 		typescript = {
@@ -73,14 +82,14 @@ return {
 				enableRegionDiagnostics = true,
 			},
 			inlayHints = {
-				includeInlayParameterNameHints = "none",
-				includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-				includeInlayFunctionParameterTypeHints = false,
-				includeInlayVariableTypeHints = false,
-				includeInlayVariableTypeHintsWhenTypeMatchesName = false,
-				includeInlayPropertyDeclarationTypeHints = false,
-				includeInlayFunctionLikeReturnTypeHints = false,
-				includeInlayEnumMemberValueHints = false,
+				includeInlayParameterNameHints = "all",
+				includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+				includeInlayFunctionParameterTypeHints = true,
+				includeInlayVariableTypeHints = true,
+				includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+				includeInlayPropertyDeclarationTypeHints = true,
+				includeInlayFunctionLikeReturnTypeHints = true,
+				includeInlayEnumMemberValueHints = true,
 			},
 		},
 	},
@@ -94,14 +103,6 @@ return {
 		if tsdk then
 			config.settings.vtsls.typescript = config.settings.vtsls.typescript or {}
 			config.settings.vtsls.typescript.globalTsdk = tsdk
-		end
-
-		local vue_plugin_path = resolve_vue_plugin(root_dir)
-		local vue_plugin = build_vue_plugin(vue_plugin_path)
-		if vue_plugin then
-			config.settings.vtsls.tsserver.globalPlugins = { vue_plugin }
-		else
-			config.settings.vtsls.tsserver.globalPlugins = {}
 		end
 	end,
 	init_options = {

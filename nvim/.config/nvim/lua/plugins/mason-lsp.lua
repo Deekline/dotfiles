@@ -14,6 +14,7 @@ local opts = {
 		"yamlls",
 		"gopls",
 		"ts_ls",
+		"vtsls",
 	},
 	automatic_installation = true,
 }
