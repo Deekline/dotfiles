@@ -134,3 +134,5 @@ eval "$(zoxide init zsh)"
 alias cd="z"
 export JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk-1.8.jdk/Contents/Home
 export PATH=$JAVA_HOME/bin:$PATH
+export PATH="$HOME/.local/bin:$PATH"
+export GOOGLE_CLOUD_PROJECT="mtech-ecom-nontrans"
