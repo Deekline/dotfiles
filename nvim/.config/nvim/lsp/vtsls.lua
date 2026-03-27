@@ -32,6 +32,11 @@ local function resolve_vue_plugin(root_dir)
 	table.insert(
 		candidates,
 		vim.fn.stdpath("data")
+			.. "/mason/packages/vue-language-server/node_modules/@vue/typescript-plugin"
+	)
+	table.insert(
+		candidates,
+		vim.fn.stdpath("data")
 			.. "/mason/packages/vue-language-server/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin"
 	)
 
