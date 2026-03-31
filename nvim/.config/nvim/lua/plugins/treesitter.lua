@@ -1,5 +1,6 @@
 local config = function()
 	local opts = {
+		install_dir = vim.fn.stdpath("data") .. "/site",
 		ensure_installed = {
 			"angular",
 			"awk",
@@ -98,6 +99,13 @@ local config = function()
 
 
   require("nvim-treesitter").setup(opts)
+
+	-- nvim-treesitter v1 removed the highlight module; start treesitter manually per buffer
+	vim.api.nvim_create_autocmd("FileType", {
+		callback = function(args)
+			pcall(vim.treesitter.start, args.buf)
+		end,
+	})
 
 	vim.treesitter.language.register("markdown", "octo")
 	vim.opt.foldmethod = "expr"

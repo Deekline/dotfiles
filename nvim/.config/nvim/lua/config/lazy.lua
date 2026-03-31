@@ -25,4 +25,9 @@ require("lazy").setup({
 	install = { colorscheme = { "onedarkpro" } },
 	-- automatically check for plugin updates
 	checker = { enabled = true },
+	performance = {
+		rtp = {
+			paths = { vim.fn.stdpath("data") .. "/site" },
+		},
+	},
 })

@@ -118,11 +118,15 @@ return {
 				TelescopePromptNormal = { bg = "NONE" },
 				TelescopeResultsNormal = { bg = "NONE" },
 
+				-- Vue component name highlighting (from vue_ls semantic tokens since v3.0.2)
+				["@lsp.type.component"] = { link = "@type" },
+
 				-- Additional transparency for common UI elements
 				Pmenu = { bg = "NONE" },
 				PmenuSel = { bg = "NONE" },
 				PmenuSbar = { bg = "NONE" },
 				PmenuThumb = { bg = "NONE" },
+
 			},
 		})
 

@@ -1,63 +1,30 @@
-local function get_typescript_sdk()
-	local local_sdk = vim.fn.getcwd() .. "/node_modules/typescript/lib"
-	if vim.fn.isdirectory(local_sdk) == 1 then
-		return local_sdk
-	end
-
-	local mason_tsdk = vim.fn.stdpath("data")
-		.. "/mason/packages/typescript-language-server/node_modules/typescript/lib"
-	if vim.fn.isdirectory(mason_tsdk) == 1 then
-		return mason_tsdk
-	end
-
-	local global_root = vim.fn.system("npm root -g"):gsub("\n", ""):gsub("\r", "")
-	local global_tsdk = global_root .. "/typescript/lib"
-	if vim.fn.isdirectory(global_tsdk) == 1 then
-		return global_tsdk
-	end
-
-	return nil
-end
-
-local function get_capabilities()
-	local base = vim.lsp.protocol.make_client_capabilities()
-	base.textDocument.completion.completionItem.snippetSupport = true
-	base.textDocument.completion.completionItem.resolveSupport = {
-		properties = { "documentation", "detail", "additionalTextEdits", "insertTextFormat", "insertTextMode" },
-	}
-
-	local ok, blink = pcall(require, "blink.cmp")
-	if ok and blink.get_lsp_capabilities then
-		return vim.tbl_deep_extend("force", {}, base, blink.get_lsp_capabilities())
-	end
-	return base
-end
-
-local tsdk = get_typescript_sdk()
-
 return {
 	cmd = { "vue-language-server", "--stdio" },
-	filetypes = { "" },
+	filetypes = { "vue" },
 	root_markers = { "package.json", "tsconfig.json", "jsconfig.json", ".git" },
 	init_options = {
 		vue = {
 			hybridMode = true,
 		},
-
-		typescript = tsdk and {
-			tsdk = tsdk,
-		} or nil,
 	},
-	settings = {
-		typescript = {
-			inlayHints = {
-				enumMemberValues = { enabled = true },
-				functionLikeReturnTypes = { enabled = true },
-				propertyDeclarationTypes = { enabled = true },
-				parameterTypes = { enabled = true, suppressWhenArgumentMatchesName = true },
-				variableTypes = { enabled = true },
-			},
-		},
-	},
-	capabilities = get_capabilities(),
+	on_init = function(client)
+		client.handlers["tsserver/request"] = function(_, result, context)
+			local clients = vim.lsp.get_clients({ bufnr = context.bufnr, name = "vtsls" })
+			if #clients == 0 then
+				vim.notify("Could not find vtsls client, vue_ls will not work properly.", vim.log.levels.WARN)
+				return
+			end
+			local ts_client = clients[1]
+			local param = unpack(result)
+			local id, command, payload = unpack(param)
+			ts_client:exec_cmd({
+				title = "vue_request_forward",
+				command = "typescript.tsserverRequest",
+				arguments = { command, payload },
+			}, { bufnr = context.bufnr }, function(_, r)
+				local response = r and r.body
+				client:notify("tsserver/response", { { id, response } })
+			end)
+		end
+	end,
 }

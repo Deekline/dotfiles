@@ -25,19 +25,13 @@ local function resolve_vue_plugin(root_dir)
 	local candidates = {}
 
 	if root_dir then
-		table.insert(candidates, root_dir .. "/node_modules/@vue/typescript-plugin")
-		table.insert(candidates, root_dir .. "/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin")
+		table.insert(candidates, root_dir .. "/node_modules/@vue/language-server")
 	end
 
 	table.insert(
 		candidates,
 		vim.fn.stdpath("data")
-			.. "/mason/packages/vue-language-server/node_modules/@vue/typescript-plugin"
-	)
-	table.insert(
-		candidates,
-		vim.fn.stdpath("data")
-			.. "/mason/packages/vue-language-server/node_modules/@vue/language-server/node_modules/@vue/typescript-plugin"
+			.. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 	)
 
 	for _, path in ipairs(candidates) do
@@ -49,21 +43,8 @@ local function resolve_vue_plugin(root_dir)
 	return nil
 end
 
-local function build_vue_plugin(path)
-	if not path then
-		return nil
-	end
-
-	return {
-		name = "@vue/typescript-plugin",
-		location = path,
-		languages = { "vue" },
-		configNamespace = "typescript",
-	}
-end
-
 local vue_plugin_path = resolve_vue_plugin(vim.fn.getcwd())
-local vue_plugin = build_vue_plugin(vue_plugin_path)
+	or vim.fn.stdpath("data") .. "/mason/packages/vue-language-server/node_modules/@vue/language-server"
 
 return {
 	cmd = { "vtsls", "--stdio" },
@@ -72,16 +53,23 @@ return {
 	single_file_support = true,
 	settings = {
 		vtsls = {
-			--autoUseWorkspaceTsdk = true,
 			tsserver = {
-				globalPlugins = vue_plugin and { vue_plugin } or {},
+				globalPlugins = {
+					{
+						name = "@vue/typescript-plugin",
+						location = vue_plugin_path,
+						languages = { "vue" },
+						configNamespace = "typescript",
+						enableForWorkspaceTypeScriptVersions = true,
+					},
+				},
 			},
 		},
 		typescript = {
 			validate = { enable = true },
 			tsserver = {
 				useSyntaxServer = "auto",
-				nodePath = "/Users/myemets/.nvm/versions/node/v22.13.1/bin/node",
+				nodePath = "/Users/myemets/.nvm/versions/node/v24.14.1/bin/node",
 				maxTsServerMemory = 4096,
 				watchOptions = "vscode",
 				enableRegionDiagnostics = true,
@@ -108,6 +96,12 @@ return {
 		if tsdk then
 			config.settings.vtsls.typescript = config.settings.vtsls.typescript or {}
 			config.settings.vtsls.typescript.globalTsdk = tsdk
+		end
+
+	end,
+	on_attach = function(client, bufnr)
+		if vim.bo[bufnr].filetype == "vue" then
+			vim.lsp.semantic_tokens.stop(bufnr, client.id)
 		end
 	end,
 	init_options = {
