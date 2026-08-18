@@ -124,7 +124,14 @@ return {
 			"nvim-treesitter/nvim-treesitter-context",
 			{
 				"bennypowers/template-literal-comments.nvim",
-				opts = true,
+				-- `opts = true` calls setup() unguarded; nvim-treesitter being
+				-- `lazy = false` means this dependency can get eager-loaded *and*
+				-- loaded again via its own `ft` trigger, calling setup() twice.
+				-- Its setup() registers a treesitter directive without
+				-- `force = true`, so the second call errors. pcall it away.
+				config = function()
+					pcall(require("template-literal-comments").setup)
+				end,
 				ft = {
 					"javascript",
 					"typescript",

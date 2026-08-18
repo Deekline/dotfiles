@@ -12,6 +12,7 @@ vim.lsp.enable({
 	"css-ls",
 	"vue_ls",
 	"vtsls",
+	"yaml-ls",
 })
 
 vim.diagnostic.config({
